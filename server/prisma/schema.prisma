@@ -1,0 +1,171 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  username     String    @unique
+  displayName  String?
+  passwordHash String
+  avatarUrl    String?
+  bio          String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  memberships  Membership[]
+  messages     Message[] @relation("MessageAuthor")
+  attachments  Attachment[] @relation("UserAttachments")
+  callSessions CallSession[] @relation("CallSessionCreator")
+  callParticipation CallParticipant[]
+  sessions     Session[]
+  servers      ServerInstance[] @relation("ServerCreator")
+}
+
+model ServerInstance {
+  id          String       @id @default(cuid())
+  name        String
+  slug        String       @unique
+  description String?
+  host        String?
+  port        Int?
+  iconUrl     String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  createdById String
+
+  createdBy User           @relation("ServerCreator", fields: [createdById], references: [id])
+  memberships Membership[]
+  channels    Channel[]
+
+  @@index([createdById])
+}
+
+model Membership {
+  id        String   @id @default(cuid())
+  userId    String
+  serverId  String
+  role      String   @default("member")
+  nickname  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User           @relation(fields: [userId], references: [id])
+  server ServerInstance @relation(fields: [serverId], references: [id])
+
+  @@unique([userId, serverId])
+  @@index([serverId])
+}
+
+enum ChannelType {
+  TEXT
+  VOICE
+}
+
+model Channel {
+  id          String      @id @default(cuid())
+  serverId    String
+  name        String
+  description String?
+  type        ChannelType @default(TEXT)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  position    Int         @default(0)
+
+  server       ServerInstance @relation(fields: [serverId], references: [id])
+  messages     Message[]
+  callSessions CallSession[]
+
+  @@index([serverId])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  channelId String
+  authorId  String
+  content   String
+  metadata  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  channel     Channel @relation(fields: [channelId], references: [id])
+  author      User    @relation("MessageAuthor", fields: [authorId], references: [id])
+  attachments Attachment[]
+
+  @@index([channelId])
+  @@index([authorId])
+}
+
+model Attachment {
+  id        String   @id @default(cuid())
+  messageId String
+  uploaderId String
+  url       String
+  fileName  String
+  mimeType  String
+  size      Int
+  createdAt DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id])
+  uploader User    @relation("UserAttachments", fields: [uploaderId], references: [id])
+
+  @@index([messageId])
+  @@index([uploaderId])
+}
+
+model CallSession {
+  id          String    @id @default(cuid())
+  channelId   String
+  createdById String
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  endedAt     DateTime?
+  metadata    Json?
+
+  channel   Channel @relation(fields: [channelId], references: [id])
+  createdBy User    @relation("CallSessionCreator", fields: [createdById], references: [id])
+  participants CallParticipant[]
+
+  @@index([channelId])
+  @@index([createdById])
+}
+
+model CallParticipant {
+  id        String   @id @default(cuid())
+  sessionId String
+  userId    String
+  joinedAt  DateTime @default(now())
+  leftAt    DateTime?
+
+  session CallSession @relation(fields: [sessionId], references: [id])
+  user    User        @relation(fields: [userId], references: [id])
+
+  @@index([sessionId])
+  @@index([userId])
+  @@unique([sessionId, userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  tokenHash    String
+  userAgent    String?
+  ipAddress    String?
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
