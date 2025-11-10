@@ -4,19 +4,30 @@ import ChannelList from './ChannelList';
 import ChatView from './ChatView';
 import UserList from './UserList';
 import VoiceControls from './VoiceControls';
+import Settings from './Settings';
 import './MainView.css';
 
 const MainView: React.FC = () => {
   const { user, currentChannelId, voiceState } = useStore();
   const [showUserList, setShowUserList] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
 
   return (
     <div className="main-view">
       <div className="sidebar-left">
         <div className="server-header">
-          <h2>FUSE SERVER</h2>
-          <div className="user-status">
-            <div className="avatar">{user?.username.charAt(0).toUpperCase()}</div>
+          <div className="server-title">
+            <span className="server-icon">⚡</span>
+            <h2>FUSE</h2>
+          </div>
+          <div className="user-status" onClick={() => setShowSettings(true)} style={{ cursor: 'pointer' }} title="Настройки">
+            <div className="avatar">
+              {user?.avatar_url ? (
+                <img src={`http://localhost:3000${user.avatar_url}`} alt={user.username} />
+              ) : (
+                user?.username.charAt(0).toUpperCase()
+              )}
+            </div>
             <div className="user-info">
               <span className="username">{user?.username}</span>
               <span className="status online">● Онлайн</span>
@@ -32,10 +43,7 @@ const MainView: React.FC = () => {
           <ChatView />
         ) : (
           <div className="no-channel-selected">
-            <svg viewBox="0 0 100 100" width="80" height="80">
-              <circle cx="50" cy="50" r="45" fill="var(--accent-primary)" opacity="0.2" />
-              <path d="M 30 35 L 30 65 L 50 50 L 70 65 L 70 35 Z" fill="var(--accent-primary)" />
-            </svg>
+            <div className="welcome-icon">⚡</div>
             <h2>Добро пожаловать в Fuse!</h2>
             <p>Выберите канал слева, чтобы начать общение</p>
           </div>
@@ -55,6 +63,8 @@ const MainView: React.FC = () => {
       >
         {showUserList ? '→' : '←'}
       </button>
+
+      {showSettings && <Settings onClose={() => setShowSettings(false)} />}
     </div>
   );
 };

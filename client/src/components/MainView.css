@@ -20,10 +20,21 @@
   background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
 }
 
+.server-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.server-icon {
+  font-size: 28px;
+  animation: glow 3s ease-in-out infinite;
+}
+
 .server-header h2 {
   font-size: 18px;
   color: var(--accent-primary);
-  margin-bottom: 15px;
   text-shadow: 0 0 10px var(--accent-glow);
   letter-spacing: 2px;
 }
@@ -46,6 +57,13 @@
   font-weight: bold;
   font-size: 18px;
   box-shadow: 0 0 10px var(--accent-glow);
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .user-info {
@@ -86,8 +104,10 @@
   gap: 20px;
 }
 
-.no-channel-selected svg {
+.welcome-icon {
+  font-size: 100px;
   animation: pulse 2s ease-in-out infinite;
+  text-shadow: 0 0 40px var(--accent-glow);
 }
 
 .no-channel-selected h2 {

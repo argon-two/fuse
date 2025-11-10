@@ -119,6 +119,8 @@ const ChatView: React.FC = () => {
 };
 
 const MessageItem: React.FC<{ message: any; isOwn: boolean }> = ({ message, isOwn }) => {
+  const avatarSrc = message.avatar_url ? `http://localhost:3000${message.avatar_url}` : null;
+  
   const renderContent = () => {
     if (message.message_type === 'image' && message.file_url) {
       return (
@@ -164,7 +166,11 @@ const MessageItem: React.FC<{ message: any; isOwn: boolean }> = ({ message, isOw
     <div className={`message ${isOwn ? 'own' : ''}`}>
       {!isOwn && (
         <div className="message-avatar">
-          {message.username?.charAt(0).toUpperCase()}
+          {avatarSrc ? (
+            <img src={avatarSrc} alt={message.username} />
+          ) : (
+            message.username?.charAt(0).toUpperCase()
+          )}
         </div>
       )}
       <div className="message-content">

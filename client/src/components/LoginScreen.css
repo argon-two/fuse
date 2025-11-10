@@ -42,6 +42,9 @@
   display: inline-block;
   margin-bottom: 15px;
   animation: glow 3s ease-in-out infinite;
+  font-size: 80px;
+  line-height: 1;
+  text-shadow: 0 0 30px var(--accent-glow);
 }
 
 .login-header h1 {

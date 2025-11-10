@@ -71,16 +71,11 @@ const LoginScreen: React.FC = () => {
   return (
     <div className="login-screen">
       <div className="login-container">
-        <div className="login-header">
-          <div className="logo">
-            <svg viewBox="0 0 100 100" width="60" height="60">
-              <circle cx="50" cy="50" r="45" fill="var(--accent-primary)" />
-              <path d="M 30 35 L 30 65 L 50 50 L 70 65 L 70 35 Z" fill="var(--bg-primary)" />
-            </svg>
-          </div>
-          <h1>FUSE</h1>
-          <p>Командные звонки и чат</p>
-        </div>
+      <div className="login-header">
+        <div className="logo">⚡</div>
+        <h1>FUSE</h1>
+        <p>Командные звонки и чат</p>
+      </div>
 
         {error && <div className="error-message">{error}</div>}
 

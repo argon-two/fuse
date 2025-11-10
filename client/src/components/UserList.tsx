@@ -43,7 +43,11 @@ const UserItem: React.FC<{ user: any }> = ({ user }) => {
   return (
     <div className="user-item">
       <div className="user-avatar">
-        {user.username.charAt(0).toUpperCase()}
+        {user.avatar_url ? (
+          <img src={`http://localhost:3000${user.avatar_url}`} alt={user.username} />
+        ) : (
+          user.username.charAt(0).toUpperCase()
+        )}
         <div className={`status-indicator ${isOnline ? 'online' : 'offline'}`} />
       </div>
       <div className="user-details">

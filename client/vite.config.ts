@@ -8,6 +8,8 @@ export default defineConfig({
     outDir: 'dist/renderer'
   },
   server: {
-    port: 5173
+    port: 5173,
+    open: true,  // Автоматически открывать в браузере
+    host: true   // Разрешить доступ из локальной сети
   }
 });

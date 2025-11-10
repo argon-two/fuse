@@ -63,4 +63,11 @@ export class UserModel {
     );
     return result.rows;
   }
+
+  static async updateAvatar(userId: number, avatarUrl: string) {
+    await db.query(
+      'UPDATE users SET avatar_url = $1 WHERE id = $2',
+      [avatarUrl, userId]
+    );
+  }
 }

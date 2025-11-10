@@ -2,8 +2,43 @@ import { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import { UserModel } from '../models/User';
 import { authenticate, AuthRequest } from '../middleware/auth';
+import multer from 'multer';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
 
 const router = Router();
+
+// Настройка загрузки аватаров
+const avatarStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = process.env.UPLOAD_DIR || './uploads';
+    const avatarDir = path.join(uploadDir, 'avatars');
+    if (!fs.existsSync(avatarDir)) {
+      fs.mkdirSync(avatarDir, { recursive: true });
+    }
+    cb(null, avatarDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = `${uuidv4()}${path.extname(file.originalname)}`;
+    cb(null, uniqueName);
+  }
+});
+
+const avatarUpload = multer({
+  storage: avatarStorage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB для аватаров (включая GIF)
+  },
+  fileFilter: (req, file, cb) => {
+    // Разрешаем изображения и GIF
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Только изображения разрешены'));
+    }
+  }
+});
 
 // Register
 router.post('/register', async (req, res) => {
@@ -107,6 +142,28 @@ router.get('/me', authenticate, async (req: AuthRequest, res) => {
     res.json({ user });
   } catch (error) {
     console.error('Get user error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Upload avatar (включая GIF)
+router.post('/avatar', authenticate, avatarUpload.single('avatar'), async (req: AuthRequest, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No avatar uploaded' });
+    }
+
+    const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+    
+    // Обновить аватар пользователя
+    await UserModel.updateAvatar(req.userId!, avatarUrl);
+
+    res.json({
+      message: 'Avatar updated successfully',
+      avatar_url: avatarUrl
+    });
+  } catch (error) {
+    console.error('Avatar upload error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
