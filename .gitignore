@@ -1,0 +1,26 @@
+# Node
+node_modules/
+*.log
+*.tmp
+
+# Builds
+dist/
+build/
+
+# Env
+.env
+.env.local
+server/.env
+client/.env
+
+# Prisma
+server/prisma/generated/
+
+# Uploads
+server/uploads/
+
+# Editor
+.DS_Store
+.idea/
+.vscode/
+

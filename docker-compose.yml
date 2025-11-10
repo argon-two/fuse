@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: fuse
+      POSTGRES_USER: fuse
+      POSTGRES_PASSWORD: fuse
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  server:
+    build:
+      context: ./server
+    environment:
+      DATABASE_URL: postgresql://fuse:fuse@db:5432/fuse?schema=public
+      JWT_SECRET: change-me
+      REFRESH_TOKEN_TTL_DAYS: 30
+      ACCESS_TOKEN_TTL_MINUTES: 30
+      FILE_STORAGE_PATH: /app/uploads
+      MAX_UPLOAD_MB: 100
+      APP_ORIGIN: http://localhost:5173
+      PORT: 4000
+    volumes:
+      - ./server/uploads:/app/uploads
+    depends_on:
+      - db
+    ports:
+      - "4000:4000"
+
+volumes:
+  postgres_data:
