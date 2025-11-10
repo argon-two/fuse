@@ -1,0 +1,83 @@
+.voice-controls {
+  background: var(--bg-tertiary);
+  border-top: 2px solid var(--accent-dark);
+  padding: 15px;
+  margin-top: auto;
+}
+
+.voice-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.voice-indicator-wrapper {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border-radius: 50%;
+}
+
+.voice-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.voice-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.voice-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.participants-count {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.control-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.control-btn {
+  flex: 1;
+  padding: 10px;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+}
+
+.control-btn.active {
+  background: var(--error);
+  border-color: var(--error);
+}
+
+.control-btn.active:hover {
+  background: #d32f2f;
+}

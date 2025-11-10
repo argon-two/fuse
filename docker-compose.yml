@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: fuse-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fuse
+      POSTGRES_USER: fuseuser
+      POSTGRES_PASSWORD: fusepassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - fuse-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fuseuser -d fuse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: fuse-server
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: fuse
+      DB_USER: fuseuser
+      DB_PASSWORD: fusepassword
+      JWT_SECRET: change-this-secret-in-production
+      UPLOAD_DIR: /app/uploads
+      MAX_FILE_SIZE: 52428800
+    volumes:
+      - uploads_data:/app/uploads
+    ports:
+      - "3000:3000"
+    networks:
+      - fuse-network
+
+volumes:
+  postgres_data:
+  uploads_data:
+
+networks:
+  fuse-network:
+    driver: bridge

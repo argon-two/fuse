@@ -1,0 +1,141 @@
+.main-view {
+  display: flex;
+  height: 100vh;
+  background: var(--bg-primary);
+  position: relative;
+}
+
+.sidebar-left {
+  width: 280px;
+  background: var(--bg-secondary);
+  border-right: 2px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.server-header {
+  padding: 20px;
+  border-bottom: 2px solid var(--border-color);
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+}
+
+.server-header h2 {
+  font-size: 18px;
+  color: var(--accent-primary);
+  margin-bottom: 15px;
+  text-shadow: 0 0 10px var(--accent-glow);
+  letter-spacing: 2px;
+}
+
+.user-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.username {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.status {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.status.online {
+  color: var(--success);
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.no-channel-selected {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  gap: 20px;
+}
+
+.no-channel-selected svg {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.no-channel-selected h2 {
+  color: var(--text-primary);
+  font-size: 24px;
+}
+
+.no-channel-selected p {
+  font-size: 16px;
+}
+
+.sidebar-right {
+  width: 240px;
+  background: var(--bg-secondary);
+  border-left: 2px solid var(--border-color);
+  flex-shrink: 0;
+  animation: slideInRight 0.3s ease-in-out;
+}
+
+.toggle-userlist {
+  position: absolute;
+  right: 240px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border: none;
+  width: 24px;
+  height: 60px;
+  border-radius: 6px 0 0 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.2s;
+  z-index: 10;
+  box-shadow: -2px 0 10px var(--accent-glow);
+}
+
+.toggle-userlist:hover {
+  width: 28px;
+  box-shadow: -4px 0 20px var(--accent-glow);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
